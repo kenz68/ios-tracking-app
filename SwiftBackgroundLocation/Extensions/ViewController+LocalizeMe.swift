@@ -46,4 +46,12 @@ extension ViewController: UIGestureRecognizerDelegate {
             }
         }
     }
+    
+    func setupStartButton(_ isTracking: Bool) {
+        if !isTracking {
+            startButton.setBackgroundImage(UIImage(named: "play"), for: .normal)
+        } else {
+            startButton.setBackgroundImage(UIImage(named: "stop"), for: .normal)
+        }
+    }
 }

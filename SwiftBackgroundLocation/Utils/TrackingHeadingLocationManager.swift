@@ -20,6 +20,12 @@ final public class TrackingHeadingLocationManager: NSObject {
         }
     }
     
+    var pausesLocationUpdatesAutomatically: Bool {
+        didSet {
+            locationManager.pausesLocationUpdatesAutomatically = pausesLocationUpdatesAutomatically
+        }
+    }
+    
     var distanceFilter: CLLocationDistance {
         didSet {
             locationManager.distanceFilter = distanceFilter
@@ -67,11 +73,14 @@ final public class TrackingHeadingLocationManager: NSObject {
     ///   - distanceFilter: distanceFilter
     ///   - allowsBackgroundLocationUpdates: should track location in background
     ///   - activityType: type of recording activity
-    public init(desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBestForNavigation, distanceFilter: CLLocationDistance = kCLDistanceFilterNone, allowsBackgroundLocationUpdates: Bool = true, activityType:CLActivityType = .fitness) {
+    public init(desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBestForNavigation, distanceFilter: CLLocationDistance = kCLDistanceFilterNone, allowsBackgroundLocationUpdates: Bool = true,
+        pausesLocationUpdatesAutomatically: Bool = false,
+        activityType:CLActivityType = .other) {
         self.desiredAccuracy = desiredAccuracy
         self.allowsBackgroundLocationUpdates = allowsBackgroundLocationUpdates
         self.distanceFilter = distanceFilter
         self.activityType = activityType
+        self.pausesLocationUpdatesAutomatically = pausesLocationUpdatesAutomatically
     }
     
     /// Method with listner

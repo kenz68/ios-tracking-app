@@ -3,6 +3,7 @@ import MapKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
     var locations: [CLLocation] = []
     var backgroundLocations: [CLLocation] = []
@@ -12,6 +13,7 @@ class ViewController: UIViewController {
     var currentBackgroundPolyline: MKPolyline?
 
     var circles: [MKCircle] = []
+    var isTracking = false
     
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var localizeMeButton: LocalizeMeButton!
@@ -25,22 +27,23 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         BackgroundDebug().print()
-        
         setUpLocalizeMeButton()
+        isTracking = false
+        setupStartButton(isTracking)
     }
     
     @IBAction func start(_ sender: Any) {
-        startTracking()
+        isTracking.toggle()
+        if isTracking {
+            startTracking()
+        } else {
+            stopTracking()
+        }
+        setupStartButton(isTracking)
     }
     
     var appDelagete = {
         return UIApplication.shared.delegate as! AppDelegate
-    }
-    
-    @IBAction func stop(_ sender: Any) {
-        appDelagete().locationManager.stop()
-        appDelagete().backgroundLocationManager.stop()
-        statusLabel.text = "stop"
     }
     
     @IBAction func clear(_ sender: Any) {
@@ -92,6 +95,12 @@ class ViewController: UIViewController {
         })
         
     }
+    
+    func stopTracking() {
+        appDelagete().locationManager.stop()
+        appDelagete().backgroundLocationManager.stop()
+        statusLabel.text = "stop"
+    }
 
     
     
@@ -123,7 +132,12 @@ class ViewController: UIViewController {
         drawLocation(locations: locations)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.statusLabel.text = "traking..."
+            if self.isTracking {
+                self.statusLabel.text = "tracking..."
+            } else {
+                self.statusLabel.text = "stop"
+            }
+            
         }
     }
     
